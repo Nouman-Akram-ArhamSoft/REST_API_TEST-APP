@@ -28,7 +28,7 @@ for run the virtual envoirement
  
  ## for Swagger Documentations:
  http://127.0.0.1:8000/swagger
- After successfully access we can register the user and login it at login api
+ After successfully access we can register the user and login it at login API
  
  # Features of Application
  

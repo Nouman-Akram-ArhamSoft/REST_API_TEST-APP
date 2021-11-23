@@ -2,25 +2,26 @@
 This is ToDo Class Base REST API Application with JWT on Django with connection of Postgresql
 
 # Setup
+
+## Install Requirements 
+ command : ``` pip3 install -r requirements.txt ```
 for run the virtual envoirement 
 
 1. virtualenv env
-2. .source env/bin/activate
+2. ``` .source env/bin/activate ```
 
-### For new project:
-3. pip install django (on ubuntu : pip3 install django)
-4. django-admin startproject ToDoProject
-5. ptyhon manage.py startapp ToDoApp
+### Clonning Project:
+
+3. ``` git clone https://github.com/Nouman-Python-Developer/REST_API_TEST-APP.git ```
 
 ## Run Server Detail:
- command : python manage.py runserver (on ubuntu : python3 manage.py runserver) 
+ command : ``` python manage.py runserver ``` (on ubuntu : ``` python3 manage.py runserver ```) 
  
-## Install Requirements 
- command : pip3 install -r requirements.txt 
+
  
  after connecting database run these commands
- **python3 manage.py makemigrations **
- **Python3 manage.py migrate **
+ ``` python3 manage.py makemigrations ```
+ ``` Python3 manage.py migrate  ```
  
  ## for Main Page:
  http://127.0.0.1:8000/

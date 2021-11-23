@@ -61,7 +61,13 @@ for run the virtual envoirement
  https://stackpython.medium.com/how-to-start-django-project-with-a-database-postgresql-aaa1d74659d8
  
  # Results
+ **Pylint result 9.41/10**
  
+ ![Pylint Result](https://user-images.githubusercontent.com/93263475/143041995-17444ae7-8430-4f8a-911e-1e04044e68c3.png)
  
+ **Test Cases Result: All Test Passed**
+ 
+![Unit Testing Result](https://user-images.githubusercontent.com/93263475/143042032-13bb90b9-4a73-47e3-9e9f-dbcfa2339c89.png)
+
  
  

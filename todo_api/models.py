@@ -1,20 +1,29 @@
+"""This module is used to create the models in database"""
 from django.db import models
-from django.contrib.auth.models import User
-from datetime import datetime
 from django.urls import reverse
-
 from django.dispatch import receiver
-from django.urls import reverse
-from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail
+from django.contrib.auth.models import User
+from django_rest_passwordreset.signals import reset_password_token_created
+
 
 # Create your models here.
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-
-    email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
-
+    """
+    Massage reset token to command line
+    :param sender: None
+    :param instance: None
+    :param reset_password_token: Rest Token
+    :param args: None
+    :param kwargs: None
+    :return:
+        Send rest password token to command line
+    """
+    email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'),
+                                                   reset_password_token.key)
+    print(sender, instance, *args, **kwargs)
     send_mail(
         # title:
         "Password Reset for {title}".format(title="TODO APP"),
@@ -28,25 +37,25 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
 
 class Task(models.Model):
+    """This class is used to create task table in database"""
     task_title = models.CharField(max_length=200, blank=False)
     task_description = models.TextField(blank=True)
     is_complete = models.BooleanField(blank=False, default=False)
 
-    # Category variables
-    HT = 'Home Task'
-    OT = 'Office Task'
-    MISC = 'Miscellaneous Task'
-
     category = [
-        (HT, "Home Task"),
-        (OT, "Office Task"),
-        (MISC, 'Miscellaneous')
+        ("Home Task", "Home Task"),
+        ("Office Task", "Office Task"),
+        ("MISC", 'Miscellaneous')
     ]
 
     task_category = models.CharField(max_length=20, choices=category, blank=False)
-    task_start_date = models.DateTimeField(default=datetime.now())
+    task_start_date = models.DateTimeField(auto_now=True)
     task_end_date = models.DateTimeField(blank=True, null=True)
     person = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
+        """
+        String representation of class
+        :return: Task Title
+        """
         return self.task_title

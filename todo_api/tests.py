@@ -1,21 +1,24 @@
-import jwt
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.test import TestCase
+"""This module is used to testing the API of todo_app"""
 from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APITestCase, APIClient
 from django.contrib.auth.models import User
-from rest_framework_jwt.serializers import jwt_payload_handler
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
-
+from rest_framework import status
+from rest_framework.test import APITestCase
 from .models import Task
+
+
 # Create your tests here.
 
 class ForgotPasswordTestCase(APITestCase):
+    """
+    Test Class for testing the Forgot password API
+    """
 
-    def setUp(self):
-        user = User.objects.create_user(
+    def setUp(self) -> None:
+        """
+        Setup the object for testing the API
+        :return: None
+        """
+        self.user = User.objects.create_user(
             first_name='test',
             last_name='test',
             email='test@gmail.com',
@@ -23,68 +26,76 @@ class ForgotPasswordTestCase(APITestCase):
             password='test'
         )
 
-    def test_forgotpassword(self):
-
-        url = '/api/password_reset/'
-        data = {
-            "email" : "test@gmail.com"
-        }
-        req = self.client.post(url, data)
-
-        data2 = {
-            "email" : "test2@gmail.com"
-        }
-        req2 = self.client.post(url, data2)
-
-
-        self.assertEqual(req.status_code, status.HTTP_200_OK)
-        self.assertEqual(req2.status_code, status.HTTP_400_BAD_REQUEST)
-
-
-    def test_resetpassword(self):
+    def test_forgot_password(self) -> None:
+        """
+        Function used to test the forgot password API
+        :return: None
+        """
         url = '/api/password_reset/'
         data = {
             "email": "test@gmail.com"
         }
         req = self.client.post(url, data)
-        print(req)
+
+        data2 = {
+            "email": "test2@gmail.com"
+        }
+        req2 = self.client.post(url, data2)
+
         self.assertEqual(req.status_code, status.HTTP_200_OK)
+        self.assertEqual(req2.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class RegistrationTestCase(APITestCase):
     """
-    Test User Registration In different cases.
+    Test User registration in different cases.
     """
-    def test_registration(self):
-        data = {
+
+    def test_registration(self) -> None:
+        """
+        Function use to test the registration API
+        :return: None
+        """
+        sample_data = {
             'first_name': 'test',
-            'last_name' : 'test',
+            'last_name': 'test',
             'email': 'test_user@test.com',
             'username': 'test_user',
             'password': 'Test_user_password_123',
         }
-        data1 = {
+
+        # Testing with short Password
+        second_sample_data = {
             'first_name': 'test',
-            'last_name' : 'test',
+            'last_name': 'test',
             'email': 'test_user@test.com',
             'username': 'test_user',
             'password': '123',
         }
 
         url = '/register/'
-        response1 = self.client.post(url, data)
-        response2 = self.client.post(url, data)
-        response3 = self.client.post(url, data1)
-        self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response3.status_code, status.HTTP_400_BAD_REQUEST)
+
+        first_registration_response = self.client.post(url, sample_data)
+
+        same_registration_response = self.client.post(url, sample_data)
+
+        short_password_response = self.client.post(url, second_sample_data)
+
+        self.assertEqual(first_registration_response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(same_registration_response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(short_password_response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class LoginUserTestCase(APITestCase):
     """
     Test login api with valid and invalid credentials.
     """
+
     def setUp(self) -> None:
+        """
+        Setup the object for testing the API
+        :return: None
+        """
         self.user = User.objects.create_user(
             first_name='test',
             last_name='test',
@@ -92,26 +103,38 @@ class LoginUserTestCase(APITestCase):
             username='test',
             password='test'
         )
-    def test_login_user(self):
+
+    def test_login_user(self) -> None:
+        """
+        Test Login user API
+        :return: None
+        """
         url = '/login/'
-        data = {
-            'username' : 'test',
-            'password' : 'test'
+        sample_data = {
+            'username': 'test',
+            'password': 'test'
         }
-        data2 = {
+        wrong_sample_data = {
             'username': 'test',
             'password': 'tes'
         }
-        response1 = self.client.post(url, data)
-        response2 = self.client.post(url, data2)
-
+        response1 = self.client.post(url, sample_data)
         self.assertEqual(response1.status_code, status.HTTP_200_OK)
+
+        response2 = self.client.post(url, wrong_sample_data)
         self.assertEqual(response2.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class CreateTaskCases(APITestCase):
+class CreateTaskTestCases(APITestCase):
+    """
+    Test Create Task API.
+    """
 
-    def setUp(self):
+    def setUp(self) -> None:
+        """
+        Setup the object for testing the API
+        :return: None
+        """
         self.user = User.objects.create_user(
             first_name='test',
             last_name='test',
@@ -119,26 +142,123 @@ class CreateTaskCases(APITestCase):
             username='test',
             password='test'
         )
+        url = reverse('login')
+        resp = self.client.post(url, {'username': 'test', 'password': 'test'}, format='json')
+        self.token = resp.data['access']
 
-    def test_createtask(self):
-        user = self.user
-        self.client.login(username='test', password="test")
-        client = APIClient()
-        refresh = RefreshToken.for_user(user)
-        client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        self.token = refresh.access_token
+        self.headers = {
+            'accept': 'application/json',
+            'HTTP_AUTHORIZATION': f'Bearer {self.token}'
+        }
 
-        data = {
+        self.data = {
             "task_title": "test",
             "task_description": "test",
             "is_complete": False,
             "task_category": "Home Task",
             "task_start_date": "2021-11-19T12:02:48.267Z",
-            "task_end_date": "2021-11-19T12:02:48.267Z",
+            "task_end_date": "2021-11-19T12:02:48.267Z"
         }
+
+    def test_create_task(self) -> None:
+        """
+        Test create Task API
+        :return: None
+        """
         url = '/tasks/'
+        post_response = self.client.post(path=url, data=self.data, **self.headers)
+        self.assertEqual(post_response.status_code, status.HTTP_201_CREATED)
 
-        response = self.client.post(url, data)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+class CRUDTaskTestCases(APITestCase):
+    """
+    Test get Task, get specific task,
+    update task and update specific task.
+    """
 
+    def setUp(self) -> None:
+        """
+        Setup the object for testing the API
+        :return: None
+        """
+        self.user = User.objects.create_user(
+            first_name='test',
+            last_name='test',
+            email='test@gmail.com',
+            username='test',
+            password='test'
+        )
+        url = reverse('login')
+        resp = self.client.post(url, {'username': 'test', 'password': 'test'}, format='json')
+        self.token = resp.data['access']
+
+        self.headers = {
+            'accept': 'application/json',
+            'HTTP_AUTHORIZATION': f'Bearer {self.token}'
+        }
+
+        self.task = Task(
+            task_title='test',
+            task_description='test',
+            is_complete=False,
+            task_category='Home Task',
+            task_start_date='2021-11-19T12:02:48.267Z',
+            task_end_date='2021-11-19T12:02:48.267Z',
+            person=self.user
+        )
+        self.task.save()
+
+    def test_get_tasks(self) -> None:
+        """
+        Test get Tasks API
+        :return: None
+        """
+        url = '/tasks/'
+        get_response = self.client.get(path=url, **self.headers)
+        self.assertEqual(get_response.status_code, status.HTTP_200_OK)
+
+    def test_get_specific_tasks(self) -> None:
+        """
+        Test get specific Tasks API
+        :return: None
+        """
+
+        url = f'/tasks/{self.task.pk}/'
+        get_response = self.client.get(path=url, **self.headers)
+        self.assertEqual(get_response.status_code, status.HTTP_200_OK)
+
+        # testing with invalid Task ID
+        url = f'/tasks/{10}/'
+        get_response = self.client.get(path=url, **self.headers)
+        self.assertEqual(get_response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_tasks(self) -> None:
+        """
+        Test Update Task API
+        :return: None
+        """
+        url = f"/tasks/{self.task.pk}/"
+        test_data = {
+            "task_title": "updated test",
+            "task_description": "updated test",
+            "is_complete": True,
+            "task_category": "Home Task",
+            "task_start_date": "2021-11-22T12:53:32.910Z",
+            "task_end_date": "2021-11-22T12:53:32.910Z"
+        }
+
+        update_response = self.client.put(path=url, data=test_data, **self.headers)
+        self.assertEqual(update_response.status_code, status.HTTP_200_OK)
+
+    def test_partial_update_task(self) -> None:
+        """
+        Test partial Update Task API
+        :return: None
+        """
+        url = f"/tasks/{self.task.pk}/"
+        test_data = {
+            "task_title": "Partial updated test"
+        }
+
+        partial_update_response = self.client.patch(path=url, data=test_data, **self.headers)
+        self.assertEqual(partial_update_response.status_code, status.HTTP_200_OK)

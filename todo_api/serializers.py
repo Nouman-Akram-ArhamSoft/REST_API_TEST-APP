@@ -16,6 +16,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['first_name', 'last_name', 'email', 'username', 'password']
         extra_kwargs = {'password': {'style': {'input_type': 'password'}, 'write_only': True}}
+        write_only_fields = ('person',)
 
 
 class TaskSerializer(serializers.ModelSerializer):

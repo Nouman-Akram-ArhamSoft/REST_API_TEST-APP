@@ -170,6 +170,71 @@ class CreateTaskTestCases(APITestCase):
         self.assertEqual(post_response.status_code, status.HTTP_201_CREATED)
 
 
+class DeleteTaskTestCases(APITestCase):
+    """Class used for testing the Delete Task API"""
+
+    def setUp(self) -> None:
+        """
+        Setup the object for testing the API
+        :return: None
+        """
+        self.user = User.objects.create_user(
+            first_name='test',
+            last_name='test',
+            email='test@gmail.com',
+            username='test',
+            password='test'
+        )
+        url = reverse('login')
+        resp = self.client.post(url, {'username': 'test', 'password': 'test'}, format='json')
+        self.token = resp.data['access']
+
+        self.headers = {
+            'accept': 'application/json',
+            'HTTP_AUTHORIZATION': f'Bearer {self.token}'
+        }
+
+        self.task_obj = Task(
+            task_title='test2',
+            task_description='test2',
+            is_complete=False,
+            task_category='Home Task',
+            task_start_date='2021-11-19T12:02:48.267Z',
+            task_end_date='2021-11-19T12:02:48.267Z',
+            person=self.user
+        )
+        self.task_obj.save()
+
+        self.test_task_obj = Task(
+            task_title='test2',
+            task_description='test2',
+            is_complete=False,
+            task_category='Home Task',
+            task_start_date='2021-11-19T12:02:48.267Z',
+            task_end_date='2021-11-19T12:02:48.267Z',
+            person=self.user
+        )
+        self.test_task_obj.save()
+
+    def test_soft_delete_task(self) -> None:
+        """
+        Soft Delete API Testing
+        :return: None
+        """
+        url = f"/soft_delete/{self.test_task_obj.pk}/"
+        get_response = self.client.delete(path=url, **self.headers)
+        self.assertEqual(get_response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_task(self) -> None:
+        """
+        Test Delete Task API
+        :return: None
+        """
+        url = f'/tasks/{self.task_obj.pk}/'
+        get_response = self.client.delete(path=url, **self.headers)
+        self.assertEqual(get_response.status_code, status.HTTP_204_NO_CONTENT)
+
+
 class CRUDTaskTestCases(APITestCase):
     """
     Test get Task, get specific task,
@@ -261,4 +326,39 @@ class CRUDTaskTestCases(APITestCase):
         }
 
         partial_update_response = self.client.patch(path=url, data=test_data, **self.headers)
+        self.assertEqual(partial_update_response.status_code, status.HTTP_200_OK)
+
+
+class ShowUserTestCases(APITestCase):
+    """Class used for testing the Show Profile API"""
+
+    def setUp(self):
+        """
+        Setup the object for testing the API
+        :return: None
+        """
+        self.user = User.objects.create_user(
+            first_name='test',
+            last_name='test',
+            email='test@gmail.com',
+            username='test',
+            password='test'
+        )
+        url = reverse('login')
+        resp = self.client.post(url, {'username': 'test', 'password': 'test'}, format='json')
+        self.token = resp.data['access']
+
+        self.headers = {
+            'accept': 'application/json',
+            'HTTP_AUTHORIZATION': f'Bearer {self.token}'
+        }
+
+    def test_show_user_profile(self) -> None:
+        """
+        Test Show User Profile API
+        :return: None
+        """
+        url = "/show_profile/"
+
+        partial_update_response = self.client.get(path=url, **self.headers)
         self.assertEqual(partial_update_response.status_code, status.HTTP_200_OK)

@@ -21,9 +21,11 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     :return:
         Send rest password token to command line
     """
-    email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'),
-                                                   reset_password_token.key)
-    print(sender, instance, *args, **kwargs)
+    print(sender, instance, args, kwargs)
+    email_plaintext_message = "{}?token={}".format(
+        reverse('password_reset:reset-password-request'),
+        reset_password_token.key)
+
     send_mail(
         # title:
         "Password Reset for {title}".format(title="TODO APP"),
@@ -59,3 +61,9 @@ class Task(models.Model):
         :return: Task Title
         """
         return self.task_title
+
+    class Meta:
+        """
+        Ordering the task by primary key
+        """
+        ordering = ('pk',)

@@ -89,6 +89,14 @@ git clone https://github.com/Nouman-Python-Developer/REST_API_TEST-APP.git
  ![Pylint Result](https://user-images.githubusercontent.com/93263475/143041995-17444ae7-8430-4f8a-911e-1e04044e68c3.png)
  
  **Test Cases Result: All Test Passed**
+ 
+ > if u see error:
+ **django user has no permission createdatabase** Run below command on postgresql cmd.
+ ```
+ Alter User User(Django user name) CreateDB;
+ ```
+ 
+ For run the test:
  ```
  python3 manage.py test
  ```

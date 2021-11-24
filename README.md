@@ -4,24 +4,43 @@ This is ToDo Class Base REST API Application with JWT on Django with connection 
 # Setup
 
 ## Install Requirements 
- command : ``` pip3 install -r requirements.txt ```
+ command : 
+ ``` 
+ pip3 install -r requirements.txt 
+ ```
 for run the virtual envoirement 
 
-1. virtualenv env
-2. ``` .source env/bin/activate ```
+``` 
+virtualenv env 
+```
+``` 
+.source env/bin/activate 
+```
 
 ### Clonning Project:
 
-3. ``` git clone https://github.com/Nouman-Python-Developer/REST_API_TEST-APP.git ```
+``` 
+git clone https://github.com/Nouman-Python-Developer/REST_API_TEST-APP.git 
+```
 
 ## Run Server Detail:
- command : ``` python manage.py runserver ``` (on ubuntu : ``` python3 manage.py runserver ```) 
+ command : 
+ ``` 
+ python manage.py runserver 
+ ``` 
+ on ubuntu : 
+ ``` 
+ python3 manage.py runserver 
+ ```
  
-
  
  after connecting database run these commands
- ``` python3 manage.py makemigrations ```
- ``` Python3 manage.py migrate  ```
+ ``` 
+ python3 manage.py makemigrations 
+ ```
+ ``` 
+ Python3 manage.py migrate  
+ ```
  
  ## for Main Page:
  http://127.0.0.1:8000/
@@ -63,10 +82,16 @@ for run the virtual envoirement
  
  # Results
  **Pylint result 9.41/10**
+  ```
+ pylint todo_api
+ ```
  
  ![Pylint Result](https://user-images.githubusercontent.com/93263475/143041995-17444ae7-8430-4f8a-911e-1e04044e68c3.png)
  
  **Test Cases Result: All Test Passed**
+ ```
+ python3 manage.py test
+ ```
  
 ![Unit Testing Result](https://user-images.githubusercontent.com/93263475/143042032-13bb90b9-4a73-47e3-9e9f-dbcfa2339c89.png)
 

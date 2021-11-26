@@ -81,7 +81,7 @@ git clone https://github.com/Nouman-Python-Developer/REST_API_TEST-APP.git
  [Database Postgresql Connection with Django](https://stackpython.medium.com/how-to-start-django-project-with-a-database-postgresql-aaa1d74659d8)
  
  # Results
- **Pylint result 9.41/10**
+ **Pylint result 9.88/10**
   ```
  pylint todo_api
  ```

@@ -86,7 +86,8 @@ git clone https://github.com/Nouman-Python-Developer/REST_API_TEST-APP.git
  pylint todo_api
  ```
  
- ![Pylint Result](https://user-images.githubusercontent.com/93263475/143041995-17444ae7-8430-4f8a-911e-1e04044e68c3.png)
+![Pylint Result update](https://user-images.githubusercontent.com/93263475/143591318-17b5d949-65a3-4bba-98f5-aa76d3ba2f90.png)
+
  
  **Test Cases Result: All Test Passed**
  
@@ -101,7 +102,8 @@ git clone https://github.com/Nouman-Python-Developer/REST_API_TEST-APP.git
  python3 manage.py test
  ```
  
-![Unit Testing Result](https://user-images.githubusercontent.com/93263475/143042032-13bb90b9-4a73-47e3-9e9f-dbcfa2339c89.png)
+![Unit Test Result](https://user-images.githubusercontent.com/93263475/143591287-ca2474ee-1000-4801-b612-633dfffcf46e.png)
+
 
  
  

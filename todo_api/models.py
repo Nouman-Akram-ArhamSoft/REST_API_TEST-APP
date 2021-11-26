@@ -10,7 +10,7 @@ from django_rest_passwordreset.signals import reset_password_token_created
 # Create your models here.
 
 @receiver(reset_password_token_created)
-def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):  # pylint: disable=W0613
     """
     Massage reset token to command line
     :param sender: None
@@ -21,14 +21,19 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     :return:
         Send rest password token to command line
     """
-    print(sender, instance, args, kwargs)
-    email_plaintext_message = "{}?token={}".format(
+
+    email_plaintext_message = "{}?token={}, {}, {}, {}, {}".format(
         reverse('password_reset:reset-password-request'),
-        reset_password_token.key)
+        reset_password_token.key,
+        sender,
+        instance,
+        args,
+        kwargs
+    )
 
     send_mail(
         # title:
-        "Password Reset for {title}".format(title="TODO APP"),
+        "Password Reset for TODO APP",
         # message:
         email_plaintext_message,
         # from:
@@ -55,15 +60,15 @@ class Task(models.Model):
     task_end_date = models.DateTimeField(blank=True, null=True)
     person = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         String representation of class
         :return: Task Title
         """
-        return self.task_title
+        return str(self.task_title)
 
-    class Meta:
+    class Meta:  # pylint: disable=R0903
         """
-        Ordering the task by primary key
+        Specifying Task Order
         """
-        ordering = ('pk',)
+        ordering = ['pk']

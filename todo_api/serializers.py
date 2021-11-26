@@ -9,7 +9,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
     User Serializer class to serialize the user data for login & email.
     """
 
-    class Meta:
+    class Meta:  # pylint: disable=R0903
         """
         Class used to enhance user serialize class functionality
         """
@@ -24,7 +24,7 @@ class TaskSerializer(serializers.ModelSerializer):
     Task Serializer class to serialize the Task data for CRUD operations.
     """
 
-    class Meta:
+    class Meta:  # pylint: disable=R0903
         """
         Class used to enhance Task serialize class functionality
         """

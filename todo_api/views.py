@@ -17,10 +17,10 @@ def get_tasks() -> Task:
     get the list of all Tasks
     :return:
     """
-    return Task.objects.all()
+    return Task.objects.all()  # pylint: disable= E1101
 
 
-class CreateListTaskView(viewsets.ModelViewSet):
+class CreateListTaskView(viewsets.ModelViewSet):  # pylint: disable=R0901
     """
     ViewSet for CRUD API's
     """
@@ -64,7 +64,7 @@ class RegisterUser(generics.CreateAPIView):
     """
     CreateAPIView for Registration of user
     """
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('id')
     serializer_class = CreateUserSerializer
     permission_classes = [AllowAny]
     renderer_classes = [JSONRenderer, AdminRenderer]
@@ -103,4 +103,4 @@ class ShowUserProfileView(generics.ListAPIView):
         token = self.request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
         valid_data = TokenBackend(algorithm='HS256').decode(token, verify=False)
         user = User.objects.filter(pk=valid_data['user_id'])
-        return user
+        return user.order_by('id')
